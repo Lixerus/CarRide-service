@@ -1,4 +1,3 @@
-![CarRide-service-digram](https://github.com/Lixerus/CarRide-service/assets/61562096/436733e6-08ab-4035-a98d-426ac07d9260)# CarRide-service
 Task 3: MSA design from Grid and Cloud course
 
 ##Architectural case - Uber
