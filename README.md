@@ -46,8 +46,8 @@ _______________
 _______________
 ## Setup
 Run ```console docker-compose up``` in root folder.
-Visit: ```localhost:8000\driver.html ``` for driver ui
-and ``` localhost:8080\passanger.html ``` for passsanger ui.
+Visit: ```localhost:8080\driver.html ``` for driver ui
+and ``` localhost:8000\passanger.html ``` for passsanger ui.
 RabbitMQ container can setup longer than 30 seconds, in that case service containers need to be restarted.
 __________________
 ## Example
