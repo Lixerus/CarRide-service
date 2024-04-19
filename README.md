@@ -45,7 +45,7 @@ _______________
 ![CarRide-service-digram](https://github.com/Lixerus/CarRide-service/assets/61562096/47711b13-f6c7-4d87-bd51-d4f5cd597021)
 _______________
 ## Setup
-Run ```console docker-compose up``` in root folder.
+Run ```docker-compose up``` in project root folder.
 Visit: ```localhost:8080\driver.html ``` for driver ui
 and ``` localhost:8000\passanger.html ``` for passsanger ui.
 RabbitMQ container can setup longer than 30 seconds, in that case service containers need to be restarted.
