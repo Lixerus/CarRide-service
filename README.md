@@ -1,4 +1,4 @@
-## Task 3: MSA design from Grid and Cloud course
+## Task 3: MSA design for Grid and Cloud course
 __________
 ### Architectural case - Uber
 #### Decomposition of functional requirements:
