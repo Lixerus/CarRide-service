@@ -1,0 +1,75 @@
+<html>
+    <head>
+        <title>Client</title>
+    </head>
+    <body>
+        <h1>Passenger</h1>
+        <form action="" onsubmit="sendMessage(event)">
+            <input type="text" id="messageText" autocomplete="off" placeholder="Your login..."/>
+            <button id="button-id">Find a pair</button>
+        </form>
+        <button id="cancel-button-id" onclick="cancelEvent()">Cancel</button>
+        <div></div>
+        <span>Your state: </span>
+        <span id="state">idle</span>
+        <span id="order"></span>
+        <script src="env.js"></script>
+        <script>
+            var ws = new WebSocket(`ws://localhost:7890`);
+            ws.onmessage = function(event) {
+                var data = event.data.split(' ')
+                if (data[data.length-1] == 'accepted'){
+                    var order = document.getElementById('order')
+                    order.textContent = `Your order: ${data[0]}`
+                    var state = document.getElementById('state')
+                    state.textContent = 'accepted'
+                }
+                else if (data[data.length-1] == 'cancelled') {
+                    var btn = document.getElementById('button-id');
+                    btn.textContent = "Find a pair";
+                    var state = document.getElementById('state')
+                    state.textContent = "cancelled"
+                    var order = document.getElementById('order')
+                    order.textContent = ''
+                };
+            };
+            function sendMessage(event) {
+                event.preventDefault()
+                var input = document.getElementById("messageText")
+                var state = document.getElementById('state')
+                if(state.textContent == 'idle'){
+                    state.textContent = 'waiting'
+                }
+                else if(state.textContent == 'waiting'){
+                    var order = document.getElementById('order')
+                    if (order.textContent !== ''){
+                        state.textContent = 'accepted'
+                        ws.send(`${input.value} ${state.textContent}`)
+                    }
+                    else{
+                    return
+                    }
+                }
+                else if (state.textContent == 'cancelled'){
+                    state.textContent = 'waiting'
+                }
+                else if (state.textContent == 'accepted'){
+                    return
+                }
+                ws.send(`${input.value} ${state.textContent}`)
+            }
+            function cancelEvent(event){
+                var state = document.getElementById('state')
+                if (state.textContent == 'cancelled'){
+                    return
+                }
+                state.textContent = 'cancelled'
+                var order = document.getElementById('order')
+                order.textContent = ''
+                var input = document.getElementById("messageText")
+                ws.send(`${input.value} ${state.textContent}`)
+            }
+        
+        </script>
+    </body>
+</html>

@@ -1,0 +1,82 @@
+version: "3"
+services:
+  rabbitmq:
+    image: rabbitmq:3.13.1-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  driver_web_client:
+    build:
+      context: ./driver_web_client
+    volumes:
+      - type: bind
+        source : ./driver_web_client
+        target : /driver_web_client
+    ports:
+      - 8080:8080
+    depends_on:
+      - rabbitmq
+      - driver_service
+    environment:
+      - HOST=driver_service
+    command: sh -c "sleep 30 && python -m http.server 8080"
+
+  driver_service:
+    build:
+      context: ./driver_service
+    volumes:
+      - type: bind
+        source : ./driver_service
+        target : /driver_service
+    depends_on:
+      - rabbitmq
+    ports:
+      - 7880:7880
+    environment:
+      - RMQ=rabbitmq
+    command: sh -c "sleep 30 && python ws_server.py"
+
+  pairing_service:
+    build:
+      context: ./pairing_service
+    volumes:
+    - type: bind
+      source: ./pairing_service
+      target: /pairing_service
+    depends_on:
+      - rabbitmq
+    environment:
+      - RMQ=rabbitmq
+    command: sh -c "sleep 30 && python pairing.py"
+
+  passenger_service:
+    build:
+      context: ./passenger_service
+    volumes:
+      - type: bind
+        source: ./passenger_service
+        target: /passenger_service
+    depends_on:
+      - rabbitmq
+    ports:
+      - 7890:7890
+    environment:
+      - RMQ=rabbitmq
+    command: sh -c "sleep 30 && python ws_server.py"
+
+  passenger_web_client:
+    build:
+      context: ./passenger_web_client
+    volumes:
+      - type: bind
+        source: ./passenger_web_client
+        target: /passenger_web_client
+    ports:
+      - 8000:8000
+    depends_on:
+      - rabbitmq
+      - passenger_service
+    environment:
+      - HOST=passenger_service
+    command: sh -c "sleep 30 && python -m http.server 8000"
